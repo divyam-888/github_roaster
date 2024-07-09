@@ -1,7 +1,8 @@
 import requests
 import random
+from Timer import timer_annotation
 
-
+@timer_annotation
 def get_github_user_data(username):
     url = f"https://api.github.com/users/{username}"
     response = requests.get(url)
