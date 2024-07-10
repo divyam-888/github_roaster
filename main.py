@@ -5,9 +5,18 @@ from model import github_roaster
 #use streamlit to create a web app
 import streamlit as st
 
-st.title("Github Roaster")
 
+
+st.title("Github Roaster")
+st.markdown("""
+        <style>
+        .css-15zrgzn {display: none}
+        </style>
+        """, unsafe_allow_html=True)
 #take input from user
+morpeheus_30 = "https://github.com/morpheus-30/"
+sourav = "https://www.streamlit.io"
+st.markdown("#### Made with ❤️ by [**`Nakshatra`**](%s) and [**`Sourav`**](%s)." % (morpeheus_30,sourav))
 username = st.text_input("Enter your github username: ")
 
 #check if username is entered
