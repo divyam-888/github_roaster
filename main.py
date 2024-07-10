@@ -15,7 +15,7 @@ st.markdown("""
         """, unsafe_allow_html=True)
 #take input from user
 morpeheus_30 = "https://github.com/morpheus-30/"
-sourav = "https://www.streamlit.io"
+sourav = "https://github.com/srv332003/"
 st.markdown("#### Made with ❤️ by [**`Nakshatra`**](%s) and [**`Sourav`**](%s)." % (morpeheus_30,sourav))
 username = st.text_input("Enter your github username: ")
 
