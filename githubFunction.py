@@ -1,11 +1,17 @@
 import requests
 import random
 from Timer import timer_annotation
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 @timer_annotation
 def get_github_user_data(username):
     url = f"https://api.github.com/users/{username}"
-    response = requests.get(url)
+    response = requests.get(url,headers={
+        "Authorization":"token "+os.getenv("GITHUB_ACCESS_TOKEN")
+    })
     data = response.json()
     if response.status_code == 200:
         name = data["name"]
@@ -46,20 +52,20 @@ def get_github_user_data(username):
 
 def get_repos(username):
     url = f"https://api.github.com/users/{username}/repos"
-    response = requests.get(url)
+    response = requests.get(url,headers={
+        "Authorization":"token "+os.getenv("GITHUB_ACCESS_TOKEN")
+    })
     # return json response in dictionary format
 
     data = response.json()
 
     # pick 5 repos randomly from the list
-    if len(data) < 5:
-        return [repo['name'] for repo in data]
-    else:
-        random.shuffle(data)
+    random.shuffle(data)
     shortlisted = []
     idx = 0
-    while len(shortlisted) < 5:
-        if data[idx]['name'] not in shortlisted and not data[idx]['fork']:
+    while len(shortlisted) <min(5, len(data)) and idx < len(data):
+        # print(data[idx]['name'], data[idx]['fork'], data[idx]['size'])
+        if data[idx]['name'] not in shortlisted and not data[idx]['fork'] and data[idx]['size'] > 0:
             shortlisted.append(data[idx]['name'])
         idx += 1
     # pull name of the repo  and return
@@ -68,12 +74,15 @@ def get_repos(username):
 def get_commits(username, repos):
     commits = {}
     for repo in repos:
+        # print(f"Getting commits for {repo}")
         commits[repo] = get_commits_for_repo(username, repo)
     return commits
 
 def get_commits_for_repo(username, repo):
     url = f"https://api.github.com/repos/{username}/{repo}/commits"
-    response = requests.get(url)
+    response = requests.get(url,headers={
+        "Authorization":"token "+os.getenv("GITHUB_ACCESS_TOKEN")
+    })
     data = response.json()
 
     if len(data) < 10:
@@ -81,6 +90,8 @@ def get_commits_for_repo(username, repo):
     else:
         random.shuffle(data)
     shortlisted = data[:10]
+    # print("Shortlisted commits:")
+    # print(shortlisted)
 
     return [commit['commit']['message'] for commit in shortlisted]
 
@@ -88,5 +99,8 @@ def get_commits_for_repo(username, repo):
 if __name__ == "__main__":
     username = input("Enter your github username: ")
     repos = get_repos(username)
+    print(repos)
     commits = get_commits(username, repos)
     print(commits)
+    
+    
