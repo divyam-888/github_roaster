@@ -4,7 +4,13 @@ from githubFunction import get_github_user_data
 from model import github_roaster
 #use streamlit to create a web app
 import streamlit as st
+import threading
+from adsConfig import inject_ga
 
+# Run inject_ga in a thread
+
+t1 = threading.Thread(target=inject_ga)
+t1.start()
 
 
 st.title("Github Roaster")
@@ -31,4 +37,3 @@ if username:
         st.write(roast)
     else:
         st.write("Error: Unable to fetch data. Please check your username.")
-
