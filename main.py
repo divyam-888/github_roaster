@@ -14,6 +14,9 @@ from validator import validate_github_username
 t1 = threading.Thread(target=inject_ga)
 t1.start()
 
+#set title header
+
+st.set_page_config(page_title="Github Roaster", page_icon="🔥")
 
 st.title("Github Roaster")
 st.markdown("""
