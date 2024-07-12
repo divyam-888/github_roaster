@@ -2,7 +2,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 import json
 from dotenv import load_dotenv
-from Timer import timer_annotation
 
 load_dotenv()
 system = """
@@ -38,7 +37,5 @@ prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)]
 chain = prompt | chat
 
 
-
-@timer_annotation
 def github_roaster(github_data):
     return chain.invoke({"github_data": github_data}).content
