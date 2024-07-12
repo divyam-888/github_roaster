@@ -6,11 +6,15 @@ import os
 
 load_dotenv()
 
+token = os.getenv("GITHUB_ACCESS_TOKEN")
+if token is None:
+    token=""
+
 @timer_annotation
 def get_github_user_data(username):
     url = f"https://api.github.com/users/{username}"
     response = requests.get(url,headers={
-        "Authorization":"token "+os.getenv("GITHUB_ACCESS_TOKEN")
+        "Authorization":"token "+ token
     })
     data = response.json()
     if response.status_code == 200:
@@ -53,7 +57,7 @@ def get_github_user_data(username):
 def get_repos(username):
     url = f"https://api.github.com/users/{username}/repos"
     response = requests.get(url,headers={
-        "Authorization":"token "+os.getenv("GITHUB_ACCESS_TOKEN")
+        "Authorization":"token "+ str(os.getenv("GITHUB_ACCESS_TOKEN"))
     })
     # return json response in dictionary format
 
