@@ -47,7 +47,11 @@ if username:
         #check if data is fetched
         if github_data:
             #roast the user
-            roast = github_roaster(github_data).replace("\n\n", "\n")
+            try:
+                roast = github_roaster(github_data).replace("\n\n", "\n")
+            except Exception as e:
+                logger.error("Error: %s" % e)
+                st.write("Server limit exceeded. Please wait for some time, you will be able to roast soon in some minutes.")
             #display the roast
             st.write(roast)
             # addRoast(username, roast)
