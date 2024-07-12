@@ -6,6 +6,7 @@ import threading
 from adsConfig import inject_ga
 from logger import logger
 from FirebaseFunctions import addRoast
+from validator import validate_github_username
 
 
 # Run inject_ga in a thread
@@ -29,24 +30,26 @@ username = st.text_input("Enter your github username: ")
 #check if username is entered
 if username:
     #get github data
-    github_data = get_github_user_data(username)
-
-    with open("count.txt", "r+") as f:
-        # count = int(str(f.read()))
-        count=0
-        count+=1
-        logger.info("User entered username: %s and count is %s" % (username, count))
-        f.truncate(0)
-        f.write(str(count))
-    
-    #check if data is fetched
-    if github_data:
-        #roast the user
-        roast = github_roaster(github_data).replace("\n\n", "\n")
-        #display the roast
-        st.write(roast)
-        addRoast(username, roast)
-        
+    if validate_github_username(username):
+        st.write(validate_github_username(username))
     else:
-        st.write("Error: Unable to fetch data. Please check your username.")
+        try:
+            github_data = get_github_user_data(username)
+        except Exception as e:
+            logger.error("Error: %s" % e)
+            st.write("Error: Unable to fetch data from github. Please try again later.")
+
+        logger.info("User entered username: %s and count is %s" % (username))
+        
+        #check if data is fetched
+        if github_data:
+            #roast the user
+            roast = github_roaster(github_data).replace("\n\n", "\n")
+            #display the roast
+            st.write(roast)
+            addRoast(username, roast)
+        else:
+            st.write("Error: Unable to fetch data. Please check your username.")
+
+
 
