@@ -10,7 +10,6 @@ token = os.getenv("GITHUB_ACCESS_TOKEN")
 if token is None:
     token=""
 
-@timer_annotation
 def get_github_user_data(username):
     url = f"https://api.github.com/users/{username}"
     response = requests.get(url,headers={
