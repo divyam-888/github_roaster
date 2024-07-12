@@ -4,3 +4,4 @@ python-dotenv
 streamlit
 instagrapi
 bs4
+firebase_admin
