@@ -50,7 +50,7 @@ if username:
             roast = github_roaster(github_data).replace("\n\n", "\n")
             #display the roast
             st.write(roast)
-            addRoast(username, roast)
+            # addRoast(username, roast)
         else:
             st.write("Error: Unable to fetch data. Please check your username.")
 
