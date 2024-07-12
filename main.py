@@ -32,7 +32,8 @@ if username:
     github_data = get_github_user_data(username)
 
     with open("count.txt", "r+") as f:
-        count = int(f.read())
+        # count = int(str(f.read()))
+        count=0
         count+=1
         logger.info("User entered username: %s and count is %s" % (username, count))
         f.truncate(0)
