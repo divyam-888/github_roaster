@@ -11,12 +11,7 @@ from logger import logger
 # Run inject_ga in a thread
 
 t1 = threading.Thread(target=inject_ga)
-# t1.start()
-
-count = 0
-
-with open("count.txt", "r") as f:
-    count = int(f.read())
+t1.start()
 
 
 st.title("Github Roaster")
@@ -31,19 +26,18 @@ sourav = "https://github.com/srv332003/"
 st.markdown("#### Made with ❤️ by [**`Nakshatra`**](%s) and [**`Sourav`**](%s)." % (morpeheus_30,sourav))
 username = st.text_input("Enter your github username: ")
 
-
-logger.info("Streamlit app started.")
 #check if username is entered
 if username:
     #get github data
     github_data = get_github_user_data(username)
 
-    count += 1
-    logger.info(f"User {username} accessed the app {count} times.")
-    with open("count.txt", "w") as f:
+    with open("count.txt", "rw") as f:
+        count = int(f.read())
+        count+=1
+        logger.info("User entered username: %s and count is %s" % (username, count))
         f.truncate(0)
         f.write(str(count))
-
+    
     #check if data is fetched
     if github_data:
         #roast the user
