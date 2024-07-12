@@ -1,5 +1,3 @@
-
-
 from githubFunction import get_github_user_data
 from model import github_roaster
 #use streamlit to create a web app
@@ -7,6 +5,8 @@ import streamlit as st
 import threading
 from adsConfig import inject_ga
 from logger import logger
+from FirebaseFunctions import addRoast
+
 
 # Run inject_ga in a thread
 
@@ -45,5 +45,8 @@ if username:
         roast = github_roaster(github_data).replace("\n\n", "\n")
         #display the roast
         st.write(roast)
+        addRoast(username, roast)
+        
     else:
         st.write("Error: Unable to fetch data. Please check your username.")
+
