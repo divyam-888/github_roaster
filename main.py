@@ -37,9 +37,12 @@ if username:
             github_data = get_github_user_data(username)
         except Exception as e:
             logger.error("Error: %s" % e)
-            st.write("Error: Unable to fetch data from github. Please try again later.")
+            st.write("""Error: Unable to fetch data from github. You do the following:
+                     - Please try again later.
+                     - Check your internet connection.
+                     - Check if your username is correct.""")
 
-        logger.info("User entered username: %s and count is %s" % (username))
+        logger.info("User entered username: %s" % (username))
         
         #check if data is fetched
         if github_data:
