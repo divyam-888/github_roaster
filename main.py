@@ -37,7 +37,7 @@ if username:
             github_data = get_github_user_data(username)
         except Exception as e:
             logger.error("Error: %s" % e)
-            st.write("""Error: Unable to fetch data from github. You do the following:
+            st.markdown("""Error: Unable to fetch data from github. You do the following:
                      - Please try again later.
                      - Check your internet connection.
                      - Check if your username is correct.""")
@@ -54,7 +54,7 @@ if username:
                 st.write("Server limit exceeded. Please wait for some time, you will be able to roast soon in some minutes.")
             #display the roast
             st.write(roast)
-            # addRoast(username, roast)
+            addRoast(username, roast)
         else:
             st.write("Error: Unable to fetch data. Please check your username.")
 
