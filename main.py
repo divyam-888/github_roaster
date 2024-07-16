@@ -4,10 +4,20 @@ from model import github_roaster
 import streamlit as st
 import threading
 from adsConfig import inject_ga
+import time
 from logger import logger
 from FirebaseFunctions import addRoast
 from validator import validate_github_username
 
+speed = 30
+def typewriter(text: str, speed: int):
+    tokens = text.split()
+    container = st.empty()
+    for index in range(len(tokens) + 1):
+        curr_full_text = " ".join(tokens[:index])
+        container.markdown(curr_full_text)
+        time.sleep(1 / speed)
+    
 
 # Run inject_ga in a thread
 
@@ -34,16 +44,16 @@ username = st.text_input("Enter your github username: ")
 if username:
     #get github data
     if validate_github_username(username):
-        st.write(validate_github_username(username))
+        typewriter(validate_github_username(username))
     else:
         try:
             github_data = get_github_user_data(username)
         except Exception as e:
             logger.error("Error: %s" % e)
-            st.markdown("""Error: Unable to fetch data from github. You do the following:
+            typewriter("""Error: Unable to fetch data from github. You do the following:
                      - Please try again later.
                      - Check your internet connection.
-                     - Check if your username is correct.""")
+                     - Check if your username is correct.""",speed)
 
         logger.info("User entered username: %s" % (username))
         
@@ -52,14 +62,19 @@ if username:
             #roast the user
             try:
                 roast = github_roaster(github_data).replace("\n\n", "\n")
+                typewriter(roast, speed)
+                addRoast(username, roast)
             except Exception as e:
                 logger.error("Error: %s" % e)
-                st.write("Server limit exceeded. Please wait for some time, you will be able to roast soon in some minutes.")
+                typewriter("Server limit exceeded. Please wait for some time, you will be able to roast soon in some minutes.",speed)
             #display the roast
-            st.write(roast)
-            addRoast(username, roast)
+            
         else:
-            st.write("Error: Unable to fetch data. Please check your username.")
+            typewriter("""Error: Unable to fetch data from github. You do the following:""",speed)
+            st.markdown("""
+                     - Please try again later.
+                     - Check your internet connection.
+                     - Check if your username is correct.""")
 
 
 
