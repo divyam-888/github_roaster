@@ -44,7 +44,7 @@ username = st.text_input("Enter your github username: ")
 if username:
     #get github data
     if validate_github_username(username):
-        typewriter(validate_github_username(username))
+        typewriter(validate_github_username(username),speed)
     else:
         try:
             github_data = get_github_user_data(username)
