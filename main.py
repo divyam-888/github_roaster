@@ -3,7 +3,6 @@ from model import github_roaster
 #use streamlit to create a web app
 import streamlit as st
 import threading
-from adsConfig import inject_ga
 import time
 from logger import logger
 from validator import validate_github_username
@@ -17,11 +16,6 @@ def typewriter(text: str, speed: int):
         container.markdown(curr_full_text)
         time.sleep(1 / speed)
     
-
-# Run inject_ga in a thread
-
-t1 = threading.Thread(target=inject_ga)
-t1.start()
 
 #set title header
 
