@@ -6,7 +6,6 @@ import threading
 from adsConfig import inject_ga
 import time
 from logger import logger
-from FirebaseFunctions import addRoast
 from validator import validate_github_username
 
 speed = 30
@@ -63,7 +62,6 @@ if username:
             try:
                 roast = github_roaster(github_data).replace("\n\n", "\n")
                 typewriter(roast, speed)
-                addRoast(username, roast)
             except Exception as e:
                 logger.error("Error: %s" % e)
                 typewriter("Server limit exceeded. Please wait for some time, you will be able to roast soon in some minutes.",speed)
