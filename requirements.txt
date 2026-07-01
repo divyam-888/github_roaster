@@ -5,3 +5,4 @@ streamlit
 instagrapi
 bs4
 firebase_admin
+aiohttp
