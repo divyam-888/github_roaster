@@ -5,9 +5,7 @@ import time
 from logger import logger
 from validator import validate_github_username
 
-# -------------------------------------------------------------------------
-# 1. UI INJECTION & TYPOGRAPHY
-# -------------------------------------------------------------------------
+
 st.set_page_config(page_title="Github Roaster", page_icon="🔥")
 
 st.markdown("""
@@ -74,9 +72,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------------------------------
-# 2. THE TYPEWRITER ENGINE (Upgraded)
-# -------------------------------------------------------------------------
+
 speed = 30
 def typewriter(text: str, speed: int):
     """
@@ -87,22 +83,18 @@ def typewriter(text: str, speed: int):
     container = st.empty()
     for index in range(len(tokens) + 1):
         curr_full_text = " ".join(tokens[:index])
-        # Inject the text into our premium CSS card
         styled_html = f"<div class='roast-card'>{curr_full_text}</div>"
         container.markdown(styled_html, unsafe_allow_html=True)
         time.sleep(1 / speed)
 
-# -------------------------------------------------------------------------
-# 3. PAGE LAYOUT & LOGIC
-# -------------------------------------------------------------------------
-# Centered, bold headers
+
 st.markdown("<h1 style='text-align: center; font-weight: 800; letter-spacing: -1px;'>GitHub Roaster 🔥</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #86868b; margin-bottom: 2rem;'>Made with ❤️ by <a href='https://github.com/divyam-888/' style='color: #0071E3; text-decoration: none;'>Divyam</a></p>", unsafe_allow_html=True)
 
-# The Input Space
+
 username = st.text_input("Enter a GitHub username:", placeholder="e.g., torvalds", label_visibility="collapsed")
 
-# Explicit Button Trigger
+# button trigger
 if st.button("Generate Roast"):
     if username:
         validation_error = validate_github_username(username)
@@ -121,7 +113,7 @@ if st.button("Generate Roast"):
             
             if github_data:
                 try:
-                    # AI Call
+                    
                     roast = github_roaster(github_data).replace("\n\n", "\n")
                     typewriter(roast, speed)
                 except Exception as e:

@@ -5,11 +5,8 @@ import os
 from functools import lru_cache
 from dotenv import load_dotenv
 
-# Initialize environment variables at module load
 load_dotenv()
 
-# We pull the token once during boot. 
-# If it's missing, we send empty headers, falling back to GitHub's unauthenticated 60 req/hr limit.
 TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
 HEADERS = {"Accept": "application/vnd.github.v3+json"}
 if TOKEN:
@@ -22,7 +19,7 @@ async def _fetch_json(session: aiohttp.ClientSession, url: str) -> dict | list |
     """
     try:
         async with session.get(url, headers=HEADERS) as response:
-            # Defensive programming: If we hit a 404 (user doesn't exist) or 403 (Rate Limit), fail gracefully.
+            
             if response.status != 200:
                 return None
             return await response.json()
@@ -38,7 +35,6 @@ async def _get_commits_for_repo(session: aiohttp.ClientSession, username: str, r
     url = f"https://api.github.com/repos/{username}/{repo_name}/commits"
     data = await _fetch_json(session, url)
     
-    # API might return None or a dictionary (error message) instead of a list of commits
     if not data or isinstance(data, dict):
         return []
 
@@ -69,7 +65,6 @@ async def _build_user_profile(username: str) -> dict | None:
         if not user_data:
             return None
 
-        # Filter valid repos (ignore forks and empty repos to avoid wasting AI tokens)
         valid_repos = []
         if repos_data and isinstance(repos_data, list):
             valid_repos = [
@@ -90,7 +85,6 @@ async def _build_user_profile(username: str) -> dict | None:
         commits_results = await asyncio.gather(*commit_tasks)
         commits_dict = {repo: commits for repo, commits in zip(selected_repos, commits_results)}
 
-        # Assemble the final contract expected by main.py
         github_data = {
             "name": user_data.get("name"),
             "followers": user_data.get("followers"),
@@ -98,7 +92,6 @@ async def _build_user_profile(username: str) -> dict | None:
             "public_repos": user_data.get("public_repos"),
         }
 
-        # Prevent injecting null keys into the prompt context window
         for field in ["bio", "location", "email"]:
             if user_data.get(field):
                 github_data[field] = user_data.get(field)
@@ -108,10 +101,6 @@ async def _build_user_profile(username: str) -> dict | None:
 
         return github_data
 
-
-# -------------------------------------------------------------------------
-# THE PUBLIC INTERFACE BOUNDARY
-# -------------------------------------------------------------------------
 
 @lru_cache(maxsize=128)
 def get_github_user_data(username: str) -> dict | None:
@@ -123,6 +112,5 @@ def get_github_user_data(username: str) -> dict | None:
        executes the async network logic, shuts down the loop, and returns standard Python objects.
        This allows us to optimize network latency without rewriting the entire Streamlit UI layer.
     """
-    # Force lowercase to normalize cache keys (preventing duplicate network calls for "torvalds" vs "Torvalds")
     clean_username = username.strip().lower()
     return asyncio.run(_build_user_profile(clean_username))
